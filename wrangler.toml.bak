@@ -1,0 +1,62 @@
+name = "speed-of-mastery-rag"
+main = "src/worker/index.ts"
+compatibility_date = "2024-12-19"
+
+# Cloudflare Pages settings
+pages_build_output_dir = "complete-app"
+
+[env.production]
+name = "speed-of-mastery-rag-prod"
+
+# Inherit bindings for production explicitly (Wrangler does not inherit by default)
+[[env.production.d1_databases]]
+binding = "DB"
+database_name = "speed-of-mastery-db"
+database_id = "e5fe5572-2e5b-4785-a1bb-a3ea13afce65"
+
+[[env.production.r2_buckets]]
+binding = "LESSON_BUCKET"
+bucket_name = "speed-of-mastery-lessons"
+
+[[env.production.vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "speed-mastery-rag"
+
+[env.production.ai]
+binding = "AI"
+
+[env.production.vars]
+ENVIRONMENT = "production"
+RAG_SYSTEM_VERSION = "1.0.0"
+MAX_CHUNK_SIZE = "1000"
+EMBEDDING_MODEL = "@cf/baai/bge-base-en-v1.5"
+
+[env.staging]
+name = "speed-of-mastery-rag-staging"
+
+# D1 Database for user progress and lesson tracking
+[[d1_databases]]
+binding = "DB"
+database_name = "speed-of-mastery-db"
+database_id = "4d7eb379-a319-49b3-adaa-31bdb5226de2"
+
+# R2 Storage for lesson content and media
+[[r2_buckets]]
+binding = "LESSON_BUCKET"
+bucket_name = "speed-of-mastery-lessons"
+
+# Vectorize for embeddings and similarity search
+[[vectorize]]
+binding = "VECTORIZE_INDEX"
+index_name = "speed-mastery-rag"
+
+# AI Gateway for model management
+[ai]
+binding = "AI"
+
+# Environment variables
+[vars]
+ENVIRONMENT = "development"
+RAG_SYSTEM_VERSION = "1.0.0"
+MAX_CHUNK_SIZE = "1000"
+EMBEDDING_MODEL = "text-embedding-ada-002"

@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Speed of Mastery - تسجيل الدخول</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .logo {
+            font-size: 60px;
+            margin-bottom: 20px;
+            animation: bounce 2s infinite;
+        }
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+            40% { transform: translateY(-10px); }
+            60% { transform: translateY(-5px); }
+        }
+        h1 {
+            color: white;
+            font-size: 32px;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .subtitle {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+            text-align: right;
+        }
+        label {
+            display: block;
+            color: white;
+            font-weight: 500;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        input {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+        input:focus {
+            outline: none;
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+        }
+        button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            font-size: 14px;
+            display: none;
+        }
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            color: #ffcccc;
+            border: 1px solid rgba(255, 0, 0, 0.3);
+        }
+        .success {
+            background: rgba(0, 255, 0, 0.2);
+            color: #ccffcc;
+            border: 1px solid rgba(0, 255, 0, 0.3);
+        }
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 30px;
+        }
+        .feature {
+            text-align: center;
+            color: white;
+        }
+        .feature-icon {
+            font-size: 24px;
+            margin-bottom: 5px;
+        }
+        .feature-text {
+            font-size: 12px;
+            opacity: 0.8;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">🚀</div>
+        <h1>Speed of Mastery</h1>
+        <p class="subtitle">منصة التعلم الذكية بالذكاء الاصطناعي</p>
+        
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="studentId">رقم الهوية / Student ID</label>
+                <input type="text" id="studentId" placeholder="أدخل رقم الهوية" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="password">كلمة المرور / Password</label>
+                <input type="password" id="password" placeholder="أدخل كلمة المرور" required>
+            </div>
+            
+            <button type="submit" id="loginBtn">
+                <span id="loginText">دخول إلى المنصة</span>
+                <span id="loadingText" style="display: none;">جاري التحقق...</span>
+            </button>
+            
+            <div id="message" class="message"></div>
+        </form>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🤖</div>
+                <div class="feature-text">مساعد ذكي</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📚</div>
+                <div class="feature-text">56 درس</div>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🏆</div>
+                <div class="feature-text">شهادات</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const BACKEND_URL = 'https://speed-of-mastery-rag.speedofmastry.workers.dev';
+        
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('password').value;
+            const loginBtn = document.getElementById('loginBtn');
+            const loginText = document.getElementById('loginText');
+            const loadingText = document.getElementById('loadingText');
+            const message = document.getElementById('message');
+            
+            // Show loading
+            loginBtn.disabled = true;
+            loginText.style.display = 'none';
+            loadingText.style.display = 'inline';
+            message.style.display = 'none';
+            
+            try {
+                const response = await fetch(`${BACKEND_URL}/api/auth/enhanced-login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userData', JSON.stringify(data.user));
+                    
+                    message.textContent = 'تم تسجيل الدخول بنجاح! جاري التوجيه...';
+                    message.className = 'message success';
+                    message.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        window.location.href = `${BACKEND_URL}/home?token=${data.token}`;
+                    }, 1500);
+                } else {
+                    throw new Error(data.message || 'فشل في تسجيل الدخول');
+                }
+            } catch (error) {
+                message.textContent = error.message || 'حدث خطأ في الاتصال';
+                message.className = 'message error';
+                message.style.display = 'block';
+            } finally {
+                loginBtn.disabled = false;
+                loginText.style.display = 'inline';
+                loadingText.style.display = 'none';
+            }
+        });
+
+        // Auto-login check
+        window.addEventListener('load', () => {
+            const token = localStorage.getItem('authToken');
+            if (token) {
+                fetch(`${BACKEND_URL}/api/auth/check-session`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        window.location.href = `${BACKEND_URL}/home?token=${token}`;
+                    }
+                })
+                .catch(() => {
+                    localStorage.removeItem('authToken');
+                    localStorage.removeItem('userData');
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
